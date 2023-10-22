@@ -18,7 +18,10 @@ import Tasks from "./components/Task";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 
-const bg = "#D1C4E9";
+const bg = "#8C9EFF";
+const bn = "#5C6BC0";
+const ac = "#1A237E";
+const lt = "#E8EAF6";
 
 export default function App() {
   const [task, setTask] = useState("");
@@ -53,9 +56,9 @@ export default function App() {
   }
   const handleClick = () => {
     if (task.trim() !== "" && task !== undefined && task != null) {
-      Keyboard.dismiss();
       setTaskList([...taskList, task]);
       setTask("");
+      // Keyboard.dismiss();
     }
     console.log(taskList);
   };
@@ -67,31 +70,34 @@ export default function App() {
     console.log(taskList);
   };
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Today's tasks:</Text>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        {taskList.map((task, index) => (
-          <View style={styles.task} key={index}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={styles.taskNo}>{index + 1}</Text>
-              <Text style={styles.taskText}>{task}</Text>
+    <>
+      <View style={styles.container}>
+        <Text style={styles.title}>Today's tasks</Text>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {taskList.map((task, index) => (
+            <View style={styles.task} key={index}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={styles.taskNo}>{index + 1}</Text>
+                <Text style={styles.taskText}>{task}</Text>
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.delete}
+                onPress={() => {
+                  handleDelete(task);
+                  console.log("pressed");
+                }}
+              >
+                <Ionicons name="close-circle" size={24} color="#B71C1C" />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.delete}
-              onPress={() => {
-                handleDelete(task);
-                console.log("pressed");
-              }}
-            >
-              <Ionicons name="ios-trash-bin" size={16} color="#B71C1C" />
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </ScrollView>
+        <StatusBar style="auto" />
+      </View>
       <KeyboardAvoidingView
         // behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.inputWrapperParent}
@@ -107,45 +113,51 @@ export default function App() {
           style={styles.addWrapper}
           onPress={handleClick}
         >
-          <Ionicons name="ios-add" size={20} color="black" />
+          <Ionicons name="ios-add" size={25} color="white" />
         </TouchableHighlight>
       </KeyboardAvoidingView>
-      <StatusBar style="auto" />
-    </View>
+    </>
   );
 }
 
-NavigationBar.setBackgroundColorAsync(bg);
+NavigationBar.setBackgroundColorAsync(bn);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: bg,
-    padding: 30,
+    paddingHorizontal: 30,
+    paddingTop: 20,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    marginBottom: -10,
   },
   title: {
     fontFamily: "SF-Bold",
     fontSize: 24,
     marginTop: 60,
     marginBottom: 30,
+    color: "#000",
+    // textTransform: "uppercase"
   },
   task: {
-    backgroundColor: "#fff",
+    backgroundColor: lt,
     paddingVertical: 15,
     paddingRight: 20,
     paddingLeft: 12,
     marginVertical: 5,
-    borderColor: "#000",
+    // borderColor: "#000",
     borderRadius: 10,
-    borderWidth: 1,
+    // borderWidth: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    elevation: 1,
   },
   taskNo: {
     fontFamily: "SF-SemiBold",
     color: "#fff",
-    backgroundColor: "#7E57C2",
+    backgroundColor: ac,
     marginRight: 12,
     borderRadius: 50,
     width: 20,
@@ -155,38 +167,49 @@ const styles = StyleSheet.create({
   taskText: {
     fontFamily: "SF-Regular",
     fontSize: 16,
+    maxWidth: "80%",
   },
+  // delete: {
+  //   backgroundColor: "#000",
+  //   height: 25,
+  // },
   inputWrapperParent: {
-    position: "absolute",
-    bottom: 0,
+    // position: "absolute",
+    // bottom: 0,
     width: "100%",
-    backgroundColor: bg,
-    marginHorizontal: 30,
-    paddingVertical: 20,
+    backgroundColor: bn,
+    // marginHorizontal: 30,
+    padding: 15,
+    paddingTop: 20,
+    // borderTopRightRadius: 15,
+    // borderTopLeftRadius: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
   },
   input: {
-    backgroundColor: "#fff",
+    backgroundColor: lt,
     width: "80%",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderColor: "#000",
+    fontSize: 16,
+    padding: 13,
+    paddingLeft: 15,
+    // borderColor: "#000",
     borderRadius: 10,
-    borderWidth: 1,
+    // borderWidth: 1,
     fontFamily: "SF-Regular",
+    elevation: 1,
   },
   addWrapper: {
-    backgroundColor: "#fff",
+    backgroundColor: ac,
     height: 50,
     width: 50,
+    // borderColor: "#000",
     borderRadius: 50,
-    borderColor: "#000",
-    borderWidth: 1,
+    // borderWidth: 1,
     paddingLeft: 1,
     paddingTop: 1,
     alignItems: "center",
     justifyContent: "center",
+    elevation: 1,
   },
 });
