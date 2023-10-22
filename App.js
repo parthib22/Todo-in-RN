@@ -1,12 +1,14 @@
 import { StatusBar } from "expo-status-bar";
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  TouchableHighlight,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -20,7 +22,6 @@ const bg = "#D1C4E9";
 
 export default function App() {
   const [task, setTask] = useState("");
-  const [count, setCount] = useState(0);
   const [taskList, setTaskList] = useState([]);
   const [fontsLoaded, fontError] = useFonts({
     "SF-Light": require("./assets/fonts/SFUIText-Light.otf"),
@@ -51,22 +52,48 @@ export default function App() {
     return null;
   }
   const handleClick = () => {
-    console.log(taskList);
     if (task.trim() !== "" && task !== undefined && task != null) {
+      Keyboard.dismiss();
       setTaskList([...taskList, task]);
       setTask("");
     }
+    console.log(taskList);
+  };
+
+  const handleDelete = (ele) => {
+    let tempList = taskList.filter((item) => item !== ele);
+    setTaskList(tempList);
+    console.log(ele);
+    console.log(taskList);
   };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Today's tasks:</Text>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
         {taskList.map((task, index) => (
-          <Tasks key={index} text={task} l={index} />
+          <View style={styles.task} key={index}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={styles.taskNo}>{index + 1}</Text>
+              <Text style={styles.taskText}>{task}</Text>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.delete}
+              onPress={() => {
+                handleDelete(task);
+                console.log("pressed");
+              }}
+            >
+              <Ionicons name="ios-trash-bin" size={16} color="#B71C1C" />
+            </TouchableOpacity>
+          </View>
         ))}
       </ScrollView>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        // behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.inputWrapperParent}
       >
         <TextInput
@@ -75,9 +102,13 @@ export default function App() {
           value={task}
           onChangeText={(e) => setTask(e)}
         />
-        <TouchableOpacity style={styles.addWrapper} onPress={handleClick}>
+        <TouchableHighlight
+          underlayColor={"#eee"}
+          style={styles.addWrapper}
+          onPress={handleClick}
+        >
           <Ionicons name="ios-add" size={20} color="black" />
-        </TouchableOpacity>
+        </TouchableHighlight>
       </KeyboardAvoidingView>
       <StatusBar style="auto" />
     </View>
@@ -97,6 +128,33 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginTop: 60,
     marginBottom: 30,
+  },
+  task: {
+    backgroundColor: "#fff",
+    paddingVertical: 15,
+    paddingRight: 20,
+    paddingLeft: 12,
+    marginVertical: 5,
+    borderColor: "#000",
+    borderRadius: 10,
+    borderWidth: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  taskNo: {
+    fontFamily: "SF-SemiBold",
+    color: "#fff",
+    backgroundColor: "#7E57C2",
+    marginRight: 12,
+    borderRadius: 50,
+    width: 20,
+    height: 20,
+    textAlign: "center",
+  },
+  taskText: {
+    fontFamily: "SF-Regular",
+    fontSize: 16,
   },
   inputWrapperParent: {
     position: "absolute",
