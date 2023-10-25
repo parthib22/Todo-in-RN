@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "Todo",
-    "slug": "Todo",
+    "name": "TodoRN",
+    "slug": "todo-pds9073",
+    "description": "This is an awesome todo app.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +16,31 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.parthib22.todolist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.parthib22.todolist"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD",
+      "url": "https://u.expo.dev/6676eba8-4caa-4191-aa66-0491a08f96df"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6676eba8-4caa-4191-aa66-0491a08f96df"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }

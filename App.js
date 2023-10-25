@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
 import { useFonts } from "expo-font";
-import Tasks from "./components/Task";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 
@@ -26,6 +25,7 @@ const lt = "#E8EAF6";
 export default function App() {
   const [task, setTask] = useState("");
   const [taskList, setTaskList] = useState([]);
+  const [isChecked, setIsChecked] = useState([]);
   const [fontsLoaded, fontError] = useFonts({
     "SF-Light": require("./assets/fonts/SFUIText-Light.otf"),
     "SF-Regular": require("./assets/fonts/SFUIText-Regular.otf"),
@@ -57,17 +57,25 @@ export default function App() {
   const handleClick = () => {
     if (task.trim() !== "" && task !== undefined && task != null) {
       setTaskList([...taskList, task]);
+      // setIsChecked([...isChecked, false]);
       setTask("");
       // Keyboard.dismiss();
     }
-    console.log(taskList);
+    // console.log(isChecked);
   };
 
   const handleDelete = (ele) => {
     let tempList = taskList.filter((item) => item !== ele);
     setTaskList(tempList);
-    console.log(ele);
-    console.log(taskList);
+    // console.log(ele);
+    // console.log(taskList);
+  };
+
+  const handleCheck = (index) => {
+    setIsChecked((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
   };
   return (
     <>
@@ -78,28 +86,43 @@ export default function App() {
           keyboardShouldPersistTaps="handled"
         >
           {taskList.map((task, index) => (
-            <View style={styles.task} key={index}>
+            <Pressable
+              onPress={() => handleCheck(index)}
+              style={styles.task}
+              key={index}
+            >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={styles.taskNo}>{index + 1}</Text>
-                <Text style={styles.taskText}>{task}</Text>
+                <Text
+                  style={[
+                    styles.taskNo,
+                    isChecked[index] && { backgroundColor: "#888" },
+                  ]}
+                >
+                  {index + 1}
+                </Text>
+                <Text
+                  style={[
+                    styles.taskText,
+                    isChecked[index] && styles.hasChecked,
+                  ]}
+                >
+                  {task}
+                </Text>
               </View>
               <TouchableOpacity
                 activeOpacity={0.5}
                 style={styles.delete}
-                onPress={() => {
-                  handleDelete(task);
-                  console.log("pressed");
-                }}
+                onPress={() => handleDelete(task)}
               >
                 <Ionicons name="close-circle" size={24} color="#B71C1C" />
               </TouchableOpacity>
-            </View>
+            </Pressable>
           ))}
         </ScrollView>
         <StatusBar style="auto" />
       </View>
       <KeyboardAvoidingView
-        // behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.inputWrapperParent}
       >
         <TextInput
@@ -120,7 +143,7 @@ export default function App() {
   );
 }
 
-NavigationBar.setBackgroundColorAsync(bn);
+NavigationBar.setBackgroundColorAsync(bg);
 
 const styles = StyleSheet.create({
   container: {
@@ -146,13 +169,13 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingLeft: 12,
     marginVertical: 5,
-    // borderColor: "#000",
+    borderColor: "#000",
+    borderWidth: 1,
     borderRadius: 10,
-    // borderWidth: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    elevation: 1,
+    // elevation: 1,
   },
   taskNo: {
     fontFamily: "SF-SemiBold",
@@ -169,6 +192,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     maxWidth: "80%",
   },
+  hasChecked: {
+    textDecorationLine: "line-through",
+    color: "#888",
+  },
   // delete: {
   //   backgroundColor: "#000",
   //   height: 25,
@@ -177,10 +204,10 @@ const styles = StyleSheet.create({
     // position: "absolute",
     // bottom: 0,
     width: "100%",
-    backgroundColor: bn,
+    backgroundColor: bg,
     // marginHorizontal: 30,
-    padding: 15,
-    paddingTop: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 20,
     // borderTopRightRadius: 15,
     // borderTopLeftRadius: 15,
     flexDirection: "row",
@@ -193,23 +220,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     padding: 13,
     paddingLeft: 15,
-    // borderColor: "#000",
+    borderColor: "#000",
+    borderWidth: 1,
     borderRadius: 10,
-    // borderWidth: 1,
     fontFamily: "SF-Regular",
-    elevation: 1,
+    // elevation: 1,
   },
   addWrapper: {
     backgroundColor: ac,
     height: 50,
     width: 50,
-    // borderColor: "#000",
+    borderColor: "#000",
+    borderWidth: 1,
     borderRadius: 50,
-    // borderWidth: 1,
     paddingLeft: 1,
     paddingTop: 1,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 1,
+    // elevation: 1,
   },
 });
